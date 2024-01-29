@@ -1,0 +1,70 @@
+services:
+
+  wordpress:
+    container_name: wordpress
+    image: wordpress:fpm
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - wordpress
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpressuser # Give any username for db user
+      WORDPRESS_DB_PASSWORD: dbpass # Give any passoword for db
+      WORDPRESS_DB_NAME: wordpressdb # Give any name for db
+    volumes:
+      - wordpress:/var/www/html
+
+  nginx:
+    container_name: nginx
+    depends_on:
+      - wordpress
+    image: nginx:latest
+    restart: always
+    ports:
+      - 80:80
+      - 443:443 # Comment out if you dont want to configure SSL
+    networks:
+      - wordpress
+    volumes:
+      - ./templates:/etc/nginx/conf.d/
+      - wordpress:/var/www/html
+      - certbot-etc:/etc/letsencrypt # Comment out if you dont want to configure SSL
+      - certbot-var:/var/lib/letsencrypt # Comment out if you dont want to configure SSL
+
+  db:
+    container_name: mysql
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: wordpressdb # Give any name for db
+      MYSQL_USER: wordpressuser # Give any username for db
+      MYSQL_PASSWORD: dbpass # Give any password for db
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - wordpress
+      
+# Comment out all the lines below if you dont want to configure SSL
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - wordpress:/var/www/html
+    depends_on:
+      - nginx
+    command: certonly --webroot --webroot-path=/var/www/html --email yourcool@email.example --agree-tos --no-eff-email -d yourdomain.name
+# Comment out all the lines above if you dont want to configure SSL
+
+volumes:
+  wordpress:
+  db:
+  certbot-etc: # Comment out if you dont want to configure SSL
+  certbot-var: # Comment out if you dont want to configure SSL
+
+networks:
+  wordpress:
