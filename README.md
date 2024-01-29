@@ -10,6 +10,7 @@ This repository is for setting up a LEMP-DOCKER (L[inux] E[ngineX] M[MySQL] P[PH
 - Clone this reposity
 - Change config files as per need
 - Run
+- `Now we have a working wordpress with docker 🎉`
 ## Tech Stack
 
 **Client:** Docker Compose
@@ -27,6 +28,7 @@ What can this do?
 
 - To add this as image to docker hub
 - Setup Auto ssl renewal in docker
+- Explain Code
 
 ## Notes
 
