@@ -1,5 +1,5 @@
 
-# LEMP-WORDPRESS
+# LEMPWP-WORDPRESS
 
 This repository is for setting up a LEMP-DOCKER (L[inux] E[ngineX] M[MySQL] P[PHP]) with Docker.
 
